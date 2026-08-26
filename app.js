@@ -1,7 +1,9 @@
 // Salolounas app.js
-// Hakee lounaslistat SUORAAN ravintoloiden omilta kotisivuilta.
-// Käyttää r.jina.ai-tekstirenderoijaa (renderoi JS:n palvelimella),
-// allorigins-proxya varajärjestelmänä.
+// Kolme hakutapaa:
+//   'lounasopas' - LounasOpas.com:in ravintolakohtainen sivu, jossa
+//                  tämän päivän otsikossa on aina merkintä "(Tänään)"
+//   'kastu'      - Kastun omalta sivulta, rivit "Ke - Annos hinta"
+//   'teijun' / 'factory' - oma sivu, otsikkona koko päivän nimi
 
 const PROXIES = [
   { name: 'jina',       build: (u) => `https://r.jina.ai/${u}`, mode: 'text' },
@@ -38,9 +40,24 @@ function extractText(html) {
 }
 
 function splitPrice(line) {
-  const m = line.match(/^(.*?)[\s]*([\d]+[.,][\d]{2})\s*€?\s*$/);
+  const m = line.match(/^(.*?)[\s–-]*([\d]+[.,][\d]{2})\s*€?\s*$/);
   if (m && m[1].trim().length > 1) return { text: m[1].trim(), price: `${m[2].replace('.', ',')} €` };
   return { text: line.trim(), price: '' };
+}
+
+function parseLounasopas(text) {
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+  const idx = lines.findIndex(l => /\(Tänään\)/i.test(l));
+  if (idx === -1) return [];
+  const items = [];
+  for (let i = idx + 1; i < lines.length; i++) {
+    if (/^#{1,3}\s/.test(lines[i])) break;
+    let l = lines[i].replace(/^[-*]+\s*/, '').trim();
+    if (l.length < 2) continue;
+    items.push(splitPrice(l));
+    if (items.length >= 8) break;
+  }
+  return items;
 }
 
 function parseKastu(text) {
@@ -76,10 +93,12 @@ function extractHeadingSection(text) {
   return items;
 }
 
-function parseTeijun(text)  { return extractHeadingSection(text); }
-function parseFactory(text) { return extractHeadingSection(text); }
-
-const PARSERS = { kastu: parseKastu, teijun: parseTeijun, factory: parseFactory };
+const PARSERS = {
+  lounasopas: parseLounasopas,
+  kastu: parseKastu,
+  teijun: extractHeadingSection,
+  factory: extractHeadingSection,
+};
 
 async function fetchViaProxy(url, proxy) {
   const res = await fetch(proxy.build(url), { signal: AbortSignal.timeout(12000) });
