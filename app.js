@@ -1,143 +1,112 @@
-// Salolounas – fetches menus from maittavamenu.fi via allorigins CORS proxy
+// Salolounas app.js
+// Hakee Salon lounaslistat LounasOpas.com:in koontisivulta (ei maittavamenusta).
+// Sivu jo merkitsee kunkin ravintolan "Tänään"-annokset, joten
+// näytetään vain tämän päivän vaihtoehdot hintoineen.
 
-const SOURCE_URL = 'https://www.maittavamenu.fi/lounaslistat/lounaslista-salo/';
-const PROXY = `https://api.allorigins.win/get?url=${encodeURIComponent(SOURCE_URL)}`;
+const SOURCE_URL = 'https://lounasopas.com/lounas/salo';
+const PROXY = `https://api.allorigins.win/get?url=${encodeURIComponent(SOURCE_URL)}&t=${Date.now()}`;
 
-const DAYS_FI = ['sunnuntai','maanantai','tiistai','keskiviikko','torstai','perjantai','lauantai'];
+const DAYS_FI   = ['sunnuntai','maanantai','tiistai','keskiviikko','torstai','perjantai','lauantai'];
 const MONTHS_FI = ['tammikuuta','helmikuuta','maaliskuuta','huhtikuuta','toukokuuta','kesäkuuta',
                    'heinäkuuta','elokuuta','syyskuuta','lokakuuta','marraskuuta','joulukuuta'];
+const TODAY = new Date();
+const TODAY_LABEL = `${DAYS_FI[TODAY.getDay()]} ${TODAY.getDate()}. ${MONTHS_FI[TODAY.getMonth()]} ${TODAY.getFullYear()}`;
+document.getElementById('date-label').textContent = TODAY_LABEL;
 
-function todayLabel() {
-  const d = new Date();
-  return `${DAYS_FI[d.getDay()]} ${d.getDate()}. ${MONTHS_FI[d.getMonth()]} ${d.getFullYear()}`;
-}
+// ---- teema ----
+const root = document.documentElement;
+const btn  = document.getElementById('theme-toggle');
 
-document.getElementById('date-label').textContent = todayLabel();
+(function initTheme() {
+  const saved = localStorage.getItem('theme') || 'dark';
+  root.setAttribute('data-theme', saved);
+})();
 
-// ---- badge helpers ----
-function parseBadges(text) {
-  const raw = text.replace(/<[^>]+>/g, '');
-  const badges = [];
-  if (/\bVEG\b/i.test(raw)) badges.push('<span class="badge badge-veg">VEG</span>');
-  if (/\bG\b/.test(raw))    badges.push('<span class="badge badge-g">G</span>');
-  if (/\bM\b/.test(raw))    badges.push('<span class="badge badge-m">M</span>');
-  const clean = raw.replace(/\b(VEG|G|M)\b[,]?\s*/g, '').trim().replace(/,\s*$/, '');
-  return { clean, badges };
-}
+btn.addEventListener('click', () => {
+  const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+});
 
-// ---- parse HTML string from proxy ----
-function parseRestaurants(html) {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, 'text/html');
+// ---- parsintaa ----
+// LounasOpas listaa rivit muodossa:
+// "Nimi – Osoite. Tänään: Annos1 (12,00 €), Annos2 (13,50 €), ..."
+function parseLounasOpas(text) {
+  const restaurants = [];
+  const lineRe = /([A-ZÄÖÅ][^–\n]{2,60})\s*–\s*([^.]+?\.\s*\d{5}\s*Salo)\.\s*Tänään:\s*([^\n]+?)(?=(?:[A-ZÄÖÅ][^–\n]{2,60}\s*–)|$)/g;
 
-  // Each restaurant is wrapped in an article or entry-content section
-  // maittavamenu uses .entry-content divs inside article.post elements
-  const articles = doc.querySelectorAll('article.post, .restaurantpost, .entry-wrap');
-
-  // Fallback: grab all h2 headings that could be restaurant names
-  if (articles.length === 0) {
-    return parseByHeadings(doc);
-  }
-
-  return Array.from(articles).map(art => parseArticle(art)).filter(Boolean);
-}
-
-function parseByHeadings(doc) {
-  const results = [];
-  // Try to find the main content container
-  const container = doc.querySelector('.entry-content, .page-content, main, #content') || doc.body;
-  const children = Array.from(container.children);
-
-  let current = null;
-  for (const el of container.querySelectorAll('h2, h3, p, ul, li, hr')) {
-    const tag = el.tagName.toLowerCase();
-    if (tag === 'h2' || tag === 'h3') {
-      if (current) results.push(current);
-      current = { name: el.textContent.trim(), items: [], price: '', address: '' };
-    } else if (current && (tag === 'p' || tag === 'li')) {
-      const txt = el.textContent.trim();
-      if (!txt || txt === '—' || txt.startsWith('—')) continue;
-      // Detect price line
-      if (/\d+[,.]\d+\s*EUR/i.test(txt) && current.price === '') {
-        current.price = txt;
-      } else if (/\d+[,.]\d+\s*EUR/i.test(txt)) {
-        // secondary price / children price, skip
-      } else if (txt.length < 5) {
-        // skip separator junk
-      } else {
-        current.items.push(txt);
-      }
+  let match;
+  while ((match = lineRe.exec(text)) !== null) {
+    const [, name, address, itemsRaw] = match;
+    const items = splitItems(itemsRaw.trim());
+    if (items.length > 0) {
+      restaurants.push({ name: name.trim(), address: address.trim(), items });
     }
   }
-  if (current) results.push(current);
-  return results.filter(r => r.items.length > 0);
+  return restaurants;
 }
 
-function parseArticle(art) {
-  const name = art.querySelector('h2, h1, .restaurant-name')?.textContent.trim();
-  if (!name) return null;
-  const items = [];
-  let price = '';
-  let address = '';
-  art.querySelectorAll('p, li').forEach(el => {
-    const txt = el.textContent.trim();
-    if (!txt) return;
-    if (/\d+[,.]\d+\s*EUR/i.test(txt) && price === '') { price = txt; return; }
-    if (/(katu|tie|kuja|aukio|\d{5})/i.test(txt)) { address = txt; return; }
-    items.push(txt);
-  });
-  return { name, items, price, address };
+function splitItems(raw) {
+  const parts = raw.split(/\),\s*/).map((s, i, arr) => (i < arr.length - 1 ? s + ')' : s));
+  return parts.map(p => {
+    const m = p.match(/^(.*?)\s*\(([\d,]+\s*€)\)\s*$/);
+    if (m) return { text: m[1].trim(), price: m[2].trim() };
+    return { text: p.trim(), price: '' };
+  }).filter(x => x.text.length > 1);
 }
 
 // ---- render ----
 function renderCard(r) {
-  const itemsHtml = r.items.slice(0, 12).map(item => {
-    const { clean, badges } = parseBadges(item);
-    return `<li>${clean}${badges.join('')}</li>`;
-  }).join('');
+  const itemsHtml = r.items.map(item => `
+    <li>
+      <span>${item.text}</span>
+      ${item.price ? `<span class="item-price">${item.price}</span>` : ''}
+    </li>`).join('');
 
-  const priceHtml = r.price
-    ? `<div class="price-tag">${r.price.replace(/(Lounas.*?EUR)/i, '<strong>$1</strong>')}</div>`
-    : '';
-
-  const addressHtml = r.address
-    ? `<div class="address">${r.address}</div>` : '';
+  const website = getWebsite(r.name);
 
   return `
-  <div class="card">
+  <div class="card status-ok">
     <div class="card-header">
-      <h2>${r.name}</h2>
-      ${addressHtml}
+      <div class="card-title-row">
+        <h2>${r.name}</h2>
+        <span class="status-dot" title="Tiedot haettu tänään"></span>
+      </div>
+      <div class="address">📍 ${r.address}</div>
     </div>
     <div class="card-body">
       <ul class="menu-items">${itemsHtml}</ul>
     </div>
     <div class="card-footer">
-      ${priceHtml}
-      <a class="more-link" href="${SOURCE_URL}" target="_blank" rel="noopener">maittavamenu.fi ↗</a>
+      <a class="more-link" href="${website}" target="_blank" rel="noopener">Avaa sivu ↗</a>
     </div>
   </div>`;
 }
 
-// ---- fetch & boot ----
+// ---- boot ----
 async function load() {
-  const loadEl = document.getElementById('loading');
+  const loadEl  = document.getElementById('loading');
   const errorEl = document.getElementById('error');
   const gridEl  = document.getElementById('restaurants');
 
   try {
-    const res = await fetch(PROXY);
+    const res = await fetch(PROXY, { signal: AbortSignal.timeout(15000) });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const json = await res.json();
     const html = json.contents;
+    if (!html) throw new Error('Tyhjä vastaus');
 
-    const restaurants = parseRestaurants(html);
+    const doc  = new DOMParser().parseFromString(html, 'text/html');
+    const main = doc.querySelector('main, article, .content, body');
+    const text = (main.innerText || main.textContent).replace(/\s+\n/g, '\n');
+
+    const restaurants = parseLounasOpas(text);
 
     loadEl.classList.add('hidden');
 
     if (restaurants.length === 0) {
       errorEl.classList.remove('hidden');
-      errorEl.textContent = 'Lounaslistoja ei löydy tänään. Tarkista maittavamenu.fi.';
+      errorEl.innerHTML = `Tänään julkaistuja lounaslistoja ei löytynyt. <a href="${SOURCE_URL}" target="_blank">Avaa LounasOpas</a>`;
       return;
     }
 
@@ -146,7 +115,7 @@ async function load() {
     loadEl.classList.add('hidden');
     errorEl.classList.remove('hidden');
     errorEl.innerHTML = `Tietojen hakeminen epäonnistui.<br><small>${err.message}</small><br><br>
-      <a href="${SOURCE_URL}" target="_blank">Avaa alkuperäinen sivu</a>`;
+      <a href="${SOURCE_URL}" target="_blank">Avaa LounasOpas.com</a>`;
   }
 }
 

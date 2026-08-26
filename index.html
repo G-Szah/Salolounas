@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fi">
+<html lang="fi" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,8 +9,14 @@
 <body>
   <header>
     <div class="header-inner">
-      <h1>🍽 Salolounas</h1>
-      <p id="date-label">Ladataan päivämäärää…</p>
+      <div class="header-left">
+        <h1>🍽 Salolounas</h1>
+        <p id="date-label"></p>
+      </div>
+      <button id="theme-toggle" aria-label="Vaihda teema" title="Vaihda teema">
+        <span class="icon-sun">☀️</span>
+        <span class="icon-moon">🌙</span>
+      </button>
     </div>
   </header>
 
@@ -24,9 +30,10 @@
   </main>
 
   <footer>
-    <p>Tiedot: <a href="https://www.maittavamenu.fi/lounaslistat/lounaslista-salo/" target="_blank">maittavamenu.fi</a></p>
+    <p>Tiedot: <a href="https://lounasopas.com/lounas/salo" target="_blank" rel="noopener">LounasOpas.com</a> · päivittyy automaattisesti</p>
   </footer>
 
+  <script src="restaurants.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
