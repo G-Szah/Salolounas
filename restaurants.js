@@ -1,10 +1,8 @@
-// Salon ravintolat – tunnetut viralliset sivut linkkeja varten.
-// Data haetaan live-tilassa LounasOpas.com:sta (ei maittavamenusta).
+// Salon ravintolat – tunnetut viralliset sivut "Avaa sivu"-linkkeja varten.
 const WEBSITES = {
-  "BKK by Thai Food Company": "https://www.thaifoodcompany.fi/",
-  "Ravintola Kastu": "https://ravintolakastu.fi/",
-  "Dreamravintola": "https://lounasopas.com/restaurant/dreamravintola-salo",
-  "ABC Piihovi Salo Restaurant": "https://www.abcasemat.fi/",
+  "Kastu": "https://ravintolakastu.fi/",
+  "Kotipizza": "https://www.kotipizza.fi/",
+  "Wiurilan kartanoravintola": "https://www.wiurila.fi/",
 };
 
 function getWebsite(name) {

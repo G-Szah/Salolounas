@@ -1,10 +1,15 @@
 // Salolounas app.js
-// Hakee Salon lounaslistat LounasOpas.com:in koontisivulta (ei maittavamenusta).
-// Sivu jo merkitsee kunkin ravintolan "Tänään"-annokset, joten
-// näytetään vain tämän päivän vaihtoehdot hintoineen.
+// Ensisijainen lähde: LounasOpas.com:in Salo-koontisivu (ei maittavamenusta).
+// LounasOpas on JS-renderoitu sivu, joten raaka HTML-fetch ei toimi –
+// käytetään r.jina.ai-tekstirenderoijaa ensisijaisena lähteenä, ja
+// allorigins-proxya varana. Jos molemmat epäonnistuvat, näytetään
+// snapshot.js:stä löytyvä viimeksi tunnettu data.
 
 const SOURCE_URL = 'https://lounasopas.com/lounas/salo';
-const PROXY = `https://api.allorigins.win/get?url=${encodeURIComponent(SOURCE_URL)}&t=${Date.now()}`;
+const PROXIES = [
+  { name: 'jina',  build: () => `https://r.jina.ai/${SOURCE_URL}`, mode: 'text' },
+  { name: 'allorigins', build: () => `https://api.allorigins.win/raw?url=${encodeURIComponent(SOURCE_URL)}&t=${Date.now()}`, mode: 'html' },
+];
 
 const DAYS_FI   = ['sunnuntai','maanantai','tiistai','keskiviikko','torstai','perjantai','lauantai'];
 const MONTHS_FI = ['tammikuuta','helmikuuta','maaliskuuta','huhtikuuta','toukokuuta','kesäkuuta',
@@ -13,7 +18,6 @@ const TODAY = new Date();
 const TODAY_LABEL = `${DAYS_FI[TODAY.getDay()]} ${TODAY.getDate()}. ${MONTHS_FI[TODAY.getMonth()]} ${TODAY.getFullYear()}`;
 document.getElementById('date-label').textContent = TODAY_LABEL;
 
-// ---- teema ----
 const root = document.documentElement;
 const btn  = document.getElementById('theme-toggle');
 
@@ -28,23 +32,7 @@ btn.addEventListener('click', () => {
   localStorage.setItem('theme', next);
 });
 
-// ---- parsintaa ----
-// LounasOpas listaa rivit muodossa:
-// "Nimi – Osoite. Tänään: Annos1 (12,00 €), Annos2 (13,50 €), ..."
-function parseLounasOpas(text) {
-  const restaurants = [];
-  const lineRe = /([A-ZÄÖÅ][^–\n]{2,60})\s*–\s*([^.]+?\.\s*\d{5}\s*Salo)\.\s*Tänään:\s*([^\n]+?)(?=(?:[A-ZÄÖÅ][^–\n]{2,60}\s*–)|$)/g;
-
-  let match;
-  while ((match = lineRe.exec(text)) !== null) {
-    const [, name, address, itemsRaw] = match;
-    const items = splitItems(itemsRaw.trim());
-    if (items.length > 0) {
-      restaurants.push({ name: name.trim(), address: address.trim(), items });
-    }
-  }
-  return restaurants;
-}
+const LINE_RE = /^- (.+?) – (.+?)\. Tänään: (.+)$/gm;
 
 function splitItems(raw) {
   const parts = raw.split(/\),\s*/).map((s, i, arr) => (i < arr.length - 1 ? s + ')' : s));
@@ -55,7 +43,24 @@ function splitItems(raw) {
   }).filter(x => x.text.length > 1);
 }
 
-// ---- render ----
+function parseLounasOpasText(text) {
+  const restaurants = [];
+  let match;
+  LINE_RE.lastIndex = 0;
+  while ((match = LINE_RE.exec(text)) !== null) {
+    const [, name, address, itemsRaw] = match;
+    const items = splitItems(itemsRaw.trim());
+    if (items.length > 0) restaurants.push({ name: name.trim(), address: address.trim(), items });
+  }
+  return restaurants;
+}
+
+function extractText(html) {
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const main = doc.querySelector('main, article, .content, body') || doc.body;
+  return (main.innerText || main.textContent || '').replace(/\s+\n/g, '\n');
+}
+
 function renderCard(r) {
   const itemsHtml = r.items.map(item => `
     <li>
@@ -70,7 +75,7 @@ function renderCard(r) {
     <div class="card-header">
       <div class="card-title-row">
         <h2>${r.name}</h2>
-        <span class="status-dot" title="Tiedot haettu tänään"></span>
+        <span class="status-dot" title="Tiedot haettu"></span>
       </div>
       <div class="address">📍 ${r.address}</div>
     </div>
@@ -83,39 +88,49 @@ function renderCard(r) {
   </div>`;
 }
 
-// ---- boot ----
+function renderAll(restaurants) {
+  const gridEl = document.getElementById('restaurants');
+  gridEl.innerHTML = restaurants.map(renderCard).join('');
+}
+
+function showNotice(msg) {
+  const el = document.getElementById('notice');
+  el.classList.remove('hidden');
+  el.textContent = msg;
+}
+
+async function tryProxy(proxy) {
+  const res = await fetch(proxy.build(), { signal: AbortSignal.timeout(12000) });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const body = await res.text();
+  const text = proxy.mode === 'html' ? extractText(body) : body;
+  const restaurants = parseLounasOpasText(text);
+  if (restaurants.length === 0) throw new Error('0 ravintolaa parsittu');
+  return restaurants;
+}
+
 async function load() {
   const loadEl  = document.getElementById('loading');
   const errorEl = document.getElementById('error');
-  const gridEl  = document.getElementById('restaurants');
 
-  try {
-    const res = await fetch(PROXY, { signal: AbortSignal.timeout(15000) });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json = await res.json();
-    const html = json.contents;
-    if (!html) throw new Error('Tyhjä vastaus');
-
-    const doc  = new DOMParser().parseFromString(html, 'text/html');
-    const main = doc.querySelector('main, article, .content, body');
-    const text = (main.innerText || main.textContent).replace(/\s+\n/g, '\n');
-
-    const restaurants = parseLounasOpas(text);
-
-    loadEl.classList.add('hidden');
-
-    if (restaurants.length === 0) {
-      errorEl.classList.remove('hidden');
-      errorEl.innerHTML = `Tänään julkaistuja lounaslistoja ei löytynyt. <a href="${SOURCE_URL}" target="_blank">Avaa LounasOpas</a>`;
+  for (const proxy of PROXIES) {
+    try {
+      const restaurants = await tryProxy(proxy);
+      loadEl.classList.add('hidden');
+      renderAll(restaurants);
       return;
+    } catch (e) {
+      console.warn(`Proxy ${proxy.name} epäonnistui:`, e.message);
     }
+  }
 
-    gridEl.innerHTML = restaurants.map(renderCard).join('');
-  } catch (err) {
-    loadEl.classList.add('hidden');
+  loadEl.classList.add('hidden');
+  if (typeof FALLBACK_RESTAURANTS !== 'undefined' && FALLBACK_RESTAURANTS.length > 0) {
+    showNotice(`Live-päivitys epäonnistui – näytetään viimeksi tallennettu lista (${SNAPSHOT_DATE}).`);
+    renderAll(FALLBACK_RESTAURANTS);
+  } else {
     errorEl.classList.remove('hidden');
-    errorEl.innerHTML = `Tietojen hakeminen epäonnistui.<br><small>${err.message}</small><br><br>
-      <a href="${SOURCE_URL}" target="_blank">Avaa LounasOpas.com</a>`;
+    errorEl.innerHTML = `Tietojen hakeminen epäonnistui kokonaan. <a href="${SOURCE_URL}" target="_blank">Avaa LounasOpas.com</a>`;
   }
 }
 

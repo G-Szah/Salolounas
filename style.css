@@ -104,6 +104,11 @@ main { max-width: 1200px; margin: 0 auto; padding: 28px 16px 60px; }
   border-radius: 12px; border: 1px solid #c0392b44; margin-bottom: 20px;
 }
 
+.notice {
+  text-align: center; padding: 10px 16px; color: #f59e0b; background: rgba(245,158,11,.1);
+  border: 1px solid rgba(245,158,11,.3); border-radius: 10px; margin-bottom: 16px; font-size: .82rem;
+}
+
 footer {
   background: var(--footer-bg); border-top: 1px solid var(--border); text-align: center;
   padding: 18px; color: var(--muted); font-size: .78rem;
