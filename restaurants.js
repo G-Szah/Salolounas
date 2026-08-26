@@ -58,5 +58,5 @@ const RESTAURANTS = [
 
   { name: 'Antonio Salo', address: 'Vilhonkatu 8, 24100 Salo',
     url: 'https://lounasopas.com/restaurant/antonio-salo-salo',
-    website: 'https://lounasopas.com/restaurant/antonio-salo-salo', type: 'lounasopas' },
+    website: 'https://www.raflaamo.fi/fi/ravintola/salo/antonio-salo/menu/lounas', type: 'lounasopas' },
 ];
