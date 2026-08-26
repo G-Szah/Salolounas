@@ -65,7 +65,12 @@
       "name": "Lounasravintola Rosmariini",
       "address": "Joensuunkatu 13, 24100 Salo",
       "website": "https://pitopalvelurosmariini.fi/lounas/",
-      "items": []
+      "items": [
+        {"text": "Butter chicken L, GL FIN", "price": ""},
+        {"text": "Jauhelihamoussaka L, GL", "price": ""},
+        {"text": "Riisi, varhaiskaalia chimichurilla", "price": ""},
+        {"text": "Mustikkakiisseli L, GL", "price": ""}
+      ]
     },
     {
       "name": "Ravintola Mama's",

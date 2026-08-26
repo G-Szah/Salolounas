@@ -3,6 +3,10 @@
 // suoraan LounasOpas.com:in ravintolakohtaisilta sivuilta (palvelinpuolella,
 // GitHub Actions -ympäristössä ei CORS-rajoituksia) ja kirjoittaa
 // tuloksen data/menu.json-tiedostoon.
+//
+// HUOM: Tämä lähde on todettu ajoittain epätarkaksi (esim. Factory Salo,
+// Rosmariini). Skripti korvataan pian ravintolakohtaisilla parsijoilla,
+// jotka hakevat suoraan ravintoloiden omilta sivuilta.
 
 import { writeFileSync, mkdirSync } from 'node:fs';
 
@@ -10,9 +14,6 @@ const RESTAURANTS = [
   { name: 'ABC Piihovi Salo Restaurant', address: 'Ruoksmäentie 1, 24260 Salo',
     url: 'https://lounasopas.com/restaurant/abc-piihovi-salo-restaurant-salo-ruoksmaentie-1-24260-salo',
     website: 'https://www.abcasemat.fi/asemat/abc-piihovi-salo-542871546/noutopoyta-lounas' },
-  { name: 'Dreamravintola', address: 'Savenvalajankatu 3, 24260 Salo',
-    url: 'https://lounasopas.com/restaurant/dreamravintola-salo',
-    website: 'https://www.dreamravintola.fi/' },
   { name: 'Factory Salo IoT Campus', address: 'Joensuunkatu 7, 24100 Salo',
     url: 'https://lounasopas.com/restaurant/factory-salo-iot-campus-salo',
     website: 'https://ravintolafactory.com/lounasravintolat/ravintolat/factory-salo/' },
@@ -30,7 +31,7 @@ const RESTAURANTS = [
     website: 'https://kivihovi.fi/lounas' },
   { name: 'Lounasravintola Rosmariini', address: 'Joensuunkatu 13, 24100 Salo',
     url: 'https://lounasopas.com/restaurant/lounasravintola-rosmariini-salo',
-    website: 'https://pitopalvelurosmariini.fi/' },
+    website: 'https://pitopalvelurosmariini.fi/lounas/' },
   { name: "Ravintola Mama's", address: 'Salorankatu 5-7, 24240 Salo',
     url: 'https://lounasopas.com/restaurant/ravintola-mama-s-salo-salorankatu-5-7-salo',
     website: 'https://www.ravintolamamas.fi/' },
