@@ -1,0 +1,30 @@
+name: Paivita Kespa-lounas
+
+on:
+  schedule:
+    - cron: '30 5 * * 1-5'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  update-kespa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Hae Kespan tämän päivän lounas
+        run: node scripts/update-kespa.mjs
+
+      - name: Tallenna päivittynyt Kespa-data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/menus/kespa.json
+          git diff --staged --quiet || git commit -m "chore: päivitä Kespa-lounas $(date -u +%Y-%m-%d)"
+          git push
