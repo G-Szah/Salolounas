@@ -1,7 +1,6 @@
 // Salolounas app.js
-// Lukee esikäsitellyn menu.json-tiedoston (generoitu GitHub Actionsilla
-// palvelinpuolella). Ei enää selaimen CORS-proxyja, joten sivu toimii
-// aina, riippumatta ulkoisten proxy-palvelujen tilasta.
+// Päädata luetaan data/menu.json-tiedostosta. Ravintolakohtainen, testattu
+// automaatio voi korvata yksittäisen kortin data/menus/<slug>.json-tiedostolla.
 
 const WEEKDAY_FULL = ['sunnuntai','maanantai','tiistai','keskiviikko','torstai','perjantai','lauantai'];
 const MONTHS_FI = ['tammikuuta','helmikuuta','maaliskuuta','huhtikuuta','toukokuuta','kesäkuuta',
@@ -32,7 +31,6 @@ function showNotice(msg) {
 
 function renderCard(r) {
   const status = r.items && r.items.length > 0 ? 'ok' : 'empty';
-
   const body = status === 'ok'
     ? `<ul class="menu-items">${r.items.map(item => `
         <li>
@@ -57,6 +55,20 @@ function renderCard(r) {
   </div>`;
 }
 
+// Palauttaa ravintolakohtaisen, automaattisesti haetun listan vain, jos
+// sen päiväys täsmää tämän päivän kanssa. Muussa tapauksessa päädata säilyy.
+async function loadFreshKespa() {
+  try {
+    const res = await fetch(`data/menus/kespa.json?t=${Date.now()}`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data.targetDate !== TODAY_ISO || !Array.isArray(data.items) || data.items.length === 0) return null;
+    return data;
+  } catch {
+    return null;
+  }
+}
+
 async function load() {
   const loadEl = document.getElementById('loading');
   const gridEl = document.getElementById('restaurants');
@@ -67,12 +79,17 @@ async function load() {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
 
-    loadEl.classList.add('hidden');
-
-    if (data.generated && data.generated !== TODAY_ISO) {
-      showNotice(`Huom: näkyvä lista on viimeksi päivitetty ${data.generated} – ei välttämättä tämän päivän mukainen.`);
+    // Kespa on ensimmäinen automaattisesti, omalta sivulta päivittyvä kortti.
+    const freshKespa = await loadFreshKespa();
+    if (freshKespa) {
+      const index = data.restaurants.findIndex(r => r.name === 'Kespa');
+      if (index !== -1) data.restaurants[index] = freshKespa;
     }
 
+    loadEl.classList.add('hidden');
+    if (data.generated && data.generated !== TODAY_ISO && !freshKespa) {
+      showNotice(`Huom: näkyvä lista on viimeksi päivitetty ${data.generated} – ei välttämättä tämän päivän mukainen.`);
+    }
     gridEl.innerHTML = data.restaurants.map(renderCard).join('');
   } catch (e) {
     loadEl.classList.add('hidden');
