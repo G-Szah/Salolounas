@@ -1,0 +1,38 @@
+name: Testaa Rikalan Krouvi -parseri
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  test-rikalan-krouvi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Hae Rikalan Krouvin sivu ja testaa tämän päivän parsinta
+        id: rikalan_test
+        continue-on-error: true
+        run: node scripts/test-rikalan-krouvi.mjs
+
+      - name: Tallenna testitulokset repoon
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          mkdir -p data/debug
+          git add -f data/debug || true
+          if ! git diff --staged --quiet; then
+            git commit -m "test: Rikalan Krouvi -parserin debug-tulos $(date -u +%Y-%m-%d)"
+            git push
+          fi
+
+      - name: Epäonnistu, jos parserin validointi epäonnistui
+        if: steps.rikalan_test.outcome == 'failure'
+        run: exit 1
