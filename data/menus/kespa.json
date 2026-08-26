@@ -1,0 +1,26 @@
+{
+  "name": "Kespa",
+  "address": "Koskikatu 1, 24240 Salo",
+  "website": "https://www.kespa.fi/",
+  "source": "https://www.kespa.fi/",
+  "updatedAt": "2026-08-26T12:34:04.254Z",
+  "targetDate": "2026-08-26",
+  "items": [
+    {
+      "text": "Pyttipannu L, G, paistettu kananmuna L, G",
+      "price": ""
+    },
+    {
+      "text": "Porsaan ulkofilee pippurikastikkeella L, G",
+      "price": ""
+    },
+    {
+      "text": "Koskenlaskija-Juustokeitto L, G",
+      "price": ""
+    },
+    {
+      "text": "Persikkarahka L, G",
+      "price": ""
+    }
+  ]
+}
