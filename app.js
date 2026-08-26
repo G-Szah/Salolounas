@@ -1,24 +1,15 @@
 // Salolounas app.js
-// Kolme hakutapaa:
-//   'lounasopas' - LounasOpas.com:in ravintolakohtainen sivu, jossa
-//                  tämän päivän otsikossa on aina merkintä "(Tänään)"
-//   'kastu'      - Kastun omalta sivulta, rivit "Ke - Annos hinta"
-//   'teijun' / 'factory' - oma sivu, otsikkona koko päivän nimi
-
-const PROXIES = [
-  { name: 'jina',       build: (u) => `https://r.jina.ai/${u}`, mode: 'text' },
-  { name: 'allorigins', build: (u) => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}&t=${Date.now()}`, mode: 'html' },
-];
+// Lukee esikäsitellyn menu.json-tiedoston (generoitu GitHub Actionsilla
+// palvelinpuolella). Ei enää selaimen CORS-proxyja, joten sivu toimii
+// aina, riippumatta ulkoisten proxy-palvelujen tilasta.
 
 const WEEKDAY_FULL = ['sunnuntai','maanantai','tiistai','keskiviikko','torstai','perjantai','lauantai'];
-const WEEKDAY_ABBR = ['su','ma','ti','ke','to','pe','la'];
 const MONTHS_FI = ['tammikuuta','helmikuuta','maaliskuuta','huhtikuuta','toukokuuta','kesäkuuta',
                    'heinäkuuta','elokuuta','syyskuuta','lokakuuta','marraskuuta','joulukuuta'];
 
 const TODAY = new Date();
-const TODAY_IDX  = TODAY.getDay();
-const TODAY_FULL = WEEKDAY_FULL[TODAY_IDX];
-const TODAY_ABBR = WEEKDAY_ABBR[TODAY_IDX];
+const TODAY_FULL = WEEKDAY_FULL[TODAY.getDay()];
+const TODAY_ISO = TODAY.toISOString().slice(0, 10);
 const TODAY_LABEL = `${TODAY_FULL} ${TODAY.getDate()}. ${MONTHS_FI[TODAY.getMonth()]} ${TODAY.getFullYear()}`;
 document.getElementById('date-label').textContent = TODAY_LABEL.charAt(0).toUpperCase() + TODAY_LABEL.slice(1);
 
@@ -33,116 +24,29 @@ btn.addEventListener('click', () => {
   localStorage.setItem('theme', next);
 });
 
-function extractText(html) {
-  const doc = new DOMParser().parseFromString(html, 'text/html');
-  const main = doc.querySelector('main, article, .content, body') || doc.body;
-  return (main.innerText || main.textContent || '').replace(/\r/g, '');
-}
-
-function splitPrice(line) {
-  const m = line.match(/^(.*?)[\s–-]*([\d]+[.,][\d]{2})\s*€?\s*$/);
-  if (m && m[1].trim().length > 1) return { text: m[1].trim(), price: `${m[2].replace('.', ',')} €` };
-  return { text: line.trim(), price: '' };
-}
-
-function parseLounasopas(text) {
-  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
-  const idx = lines.findIndex(l => /\(Tänään\)/i.test(l));
-  if (idx === -1) return [];
-  const items = [];
-  for (let i = idx + 1; i < lines.length; i++) {
-    if (/^#{1,3}\s/.test(lines[i])) break;
-    let l = lines[i].replace(/^[-*]+\s*/, '').trim();
-    if (l.length < 2) continue;
-    items.push(splitPrice(l));
-    if (items.length >= 8) break;
-  }
-  return items;
-}
-
-function parseKastu(text) {
-  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
-  const re = new RegExp(`^${TODAY_ABBR}\\s*-\\s*(.+)$`, 'i');
-  const items = [];
-  for (const l of lines) {
-    const m = l.match(re);
-    if (m) items.push(splitPrice(m[1]));
-  }
-  return items;
-}
-
-function extractHeadingSection(text) {
-  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
-  const dayRe = new RegExp(`^\\*{0,2}#{0,3}\\s*${TODAY_FULL}\\b`, 'i');
-  const start = lines.findIndex(l => dayRe.test(l));
-  if (start === -1) return [];
-
-  const otherDays = WEEKDAY_FULL.filter(d => d !== TODAY_FULL);
-  const otherRe = new RegExp(`^\\*{0,2}#{0,3}\\s*(${otherDays.join('|')})\\b`, 'i');
-  const englishRe = /^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b/i;
-
-  const items = [];
-  for (let i = start + 1; i < lines.length; i++) {
-    if (otherRe.test(lines[i]) || englishRe.test(lines[i])) break;
-    let l = lines[i].replace(/^[-*]+\s*/, '').replace(/\*\*/g, '').trim();
-    if (l.length < 2) continue;
-    if (/^(l|vl|g|ve|m|vs)(\+|,)?(l|vl|g|ve|m|vs)*$/i.test(l)) continue;
-    items.push(splitPrice(l));
-    if (items.length >= 8) break;
-  }
-  return items;
-}
-
-const PARSERS = {
-  lounasopas: parseLounasopas,
-  kastu: parseKastu,
-  teijun: extractHeadingSection,
-  factory: extractHeadingSection,
-};
-
-async function fetchViaProxy(url, proxy) {
-  const res = await fetch(proxy.build(url), { signal: AbortSignal.timeout(12000) });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const body = await res.text();
-  return proxy.mode === 'html' ? extractText(body) : body;
-}
-
-async function fetchRestaurant(r) {
-  const parser = PARSERS[r.type];
-  for (const proxy of PROXIES) {
-    try {
-      const text = await fetchViaProxy(r.url, proxy);
-      const items = parser(text);
-      if (items.length > 0) return { ...r, items, ok: true };
-    } catch (e) {
-      console.warn(`${r.name} / ${proxy.name} epäonnistui:`, e.message);
-    }
-  }
-  return { ...r, items: [], ok: false };
+function showNotice(msg) {
+  const el = document.getElementById('notice');
+  el.classList.remove('hidden');
+  el.textContent = msg;
 }
 
 function renderCard(r) {
-  const status = r.ok && r.items.length > 0 ? 'ok' : (r.ok ? 'empty' : 'error');
+  const status = r.items && r.items.length > 0 ? 'ok' : 'empty';
 
-  let body;
-  if (status === 'ok') {
-    body = `<ul class="menu-items">${r.items.map(item => `
-      <li>
-        <span>${item.text}</span>
-        ${item.price ? `<span class="item-price">${item.price}</span>` : ''}
-      </li>`).join('')}</ul>`;
-  } else if (status === 'empty') {
-    body = `<p class="muted-note">Tälle päivälle ei löytynyt listaa (esim. viikonloppu).</p>`;
-  } else {
-    body = `<p class="muted-note">Tietojen hakeminen epäonnistui.</p>`;
-  }
+  const body = status === 'ok'
+    ? `<ul class="menu-items">${r.items.map(item => `
+        <li>
+          <span>${item.text}</span>
+          ${item.price ? `<span class="item-price">${item.price}</span>` : ''}
+        </li>`).join('')}</ul>`
+    : `<p class="muted-note">Tälle päivälle ei löytynyt listaa.</p>`;
 
   return `
   <div class="card status-${status}">
     <div class="card-header">
       <div class="card-title-row">
         <h2>${r.name}</h2>
-        <span class="status-dot" title="${status === 'ok' ? 'Tiedot haettu' : status === 'empty' ? 'Ei listaa' : 'Virhe'}"></span>
+        <span class="status-dot" title="${status === 'ok' ? 'Tiedot saatavilla' : 'Ei listaa'}"></span>
       </div>
       <div class="address">📍 ${r.address}</div>
     </div>
@@ -158,16 +62,24 @@ async function load() {
   const gridEl = document.getElementById('restaurants');
   const errorEl = document.getElementById('error');
 
-  const results = await Promise.all(RESTAURANTS.map(fetchRestaurant));
-  loadEl.classList.add('hidden');
+  try {
+    const res = await fetch(`data/menu.json?t=${Date.now()}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
 
-  const anyData = results.some(r => r.items.length > 0);
-  if (!anyData) {
+    loadEl.classList.add('hidden');
+
+    if (data.generated && data.generated !== TODAY_ISO) {
+      showNotice(`Huom: näkyvä lista on viimeksi päivitetty ${data.generated} – ei välttämättä tämän päivän mukainen.`);
+    }
+
+    gridEl.innerHTML = data.restaurants.map(renderCard).join('');
+  } catch (e) {
+    loadEl.classList.add('hidden');
     errorEl.classList.remove('hidden');
-    errorEl.textContent = 'Yhdenkään ravintolan tietoja ei saatu haettua tänään.';
+    errorEl.textContent = 'Lounaslistojen lataaminen epäonnistui. Yritä päivittää sivu.';
+    console.error(e);
   }
-
-  gridEl.innerHTML = results.map(renderCard).join('');
 }
 
 load();

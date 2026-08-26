@@ -1,0 +1,135 @@
+{
+  "generated": "2026-08-26",
+  "dayLabel": "keskiviikko",
+  "restaurants": [
+    {
+      "name": "ABC Piihovi Salo Restaurant",
+      "address": "Ruoksmäentie 1, 24260 Salo",
+      "website": "https://www.abcasemat.fi/asemat/abc-piihovi-salo-542871546/noutopoyta-lounas",
+      "items": [
+        {"text": "Pizzapöytä sis. 5 eri pizzaa", "price": "14,90 €"},
+        {"text": "Jauhelihamureketta sienikastikkeessa", "price": "14,90 €"},
+        {"text": "Puolukkahilloa", "price": "14,90 €"},
+        {"text": "Mac'n'cheese & chicken", "price": "14,90 €"},
+        {"text": "Kasvisbolognesea italialaiseen tapaan", "price": "14,90 €"},
+        {"text": "Rapeita wokkikasviksia", "price": "14,90 €"},
+        {"text": "Perunamuusia", "price": "14,90 €"}
+      ]
+    },
+    {
+      "name": "Dreamravintola",
+      "address": "Savenvalajankatu 3, 24260 Salo",
+      "website": "https://www.dreamravintola.fi/",
+      "items": [{"text": "Lounas (sisältää myös salaatin)", "price": "12,00 €"}]
+    },
+    {
+      "name": "Factory Salo IoT Campus",
+      "address": "Joensuunkatu 7, 24100 Salo",
+      "website": "https://ravintolafactory.com/lounasravintolat/ravintolat/factory-salo/",
+      "items": [{"text": "Kotiruokabuffet: Tomaattinen rapukeitto + Paneroitua kanan sisäfilettä + ranch-uunilohkoperunat + Tofu Tikka Masala + Aurinkokiisseli minttuvaahdolla", "price": "13,70 €"}]
+    },
+    {
+      "name": "Kastu",
+      "address": "Helsingintie 3, 24100 Salo",
+      "website": "https://ravintolakastu.fi/",
+      "items": [
+        {"text": "Lihapullat pippurikastikkeessa", "price": "13,70 €"},
+        {"text": "Bataatti-inkiväärikeitto", "price": "12,50 €"}
+      ]
+    },
+    {
+      "name": "Kespa",
+      "address": "Koskikatu 1, 24240 Salo",
+      "website": "https://www.kespa.fi/",
+      "items": [
+        {"text": "Paistettu kampela", "price": "13,50 €"},
+        {"text": "Jauhelihakastike", "price": "13,50 €"},
+        {"text": "Lihakeitto", "price": "13,50 €"},
+        {"text": "Omenakaurapaistos", "price": "13,50 €"}
+      ]
+    },
+    {
+      "name": "KhaoSuk",
+      "address": "Helsingintie 8, 24100 Salo",
+      "website": "https://www.khaosuk.com/",
+      "items": [{"text": "Friteerattua kanaa, ruskea kanakastike riisinuudeleilla", "price": "13,50 €"}]
+    },
+    {
+      "name": "Liikenneasema Kivihovi",
+      "address": "Bulevardi 10, 25410 Suomusjärvi",
+      "website": "https://kivihovi.fi/lounas",
+      "items": [{"text": "Rapea kalapala, remouladekastiketta", "price": "14,00 €"}]
+    },
+    {
+      "name": "Lounasravintola Rosmariini",
+      "address": "Joensuunkatu 13, 24100 Salo",
+      "website": "https://pitopalvelurosmariini.fi/",
+      "items": [
+        {"text": "Kermainen lohikeitto (L,G)", "price": "11,00 €"},
+        {"text": "Ylikypsää BBQ-possua (M,G), paistetut perunat", "price": "14,50 €"},
+        {"text": "Broileri burgundin tapaan (L,G), riisi", "price": "14,50 €"},
+        {"text": "Pinaattilettuja ja puolukkahilloa (L)", "price": "12,50 €"},
+        {"text": "Marjapiirakkaa ja vaniljakastike (L)", "price": "5,50 €"}
+      ]
+    },
+    {
+      "name": "Ravintola Mama's",
+      "address": "Salorankatu 5-7, 24240 Salo",
+      "website": "https://www.ravintolamamas.fi/",
+      "items": [
+        {"text": "Lounas", "price": "11,50 €"},
+        {"text": "Keittolounas", "price": "9,50 €"},
+        {"text": "Salaattilounas", "price": "8,50 €"}
+      ]
+    },
+    {
+      "name": "Rikalan krouvi",
+      "address": "Rikalantie 74, 24800 Halikko, Salo",
+      "website": "https://rikalankrouvi.fi/lounas/",
+      "items": [
+        {"text": "Punajuuri-fetasalaattia ja balsamicokastiketta", "price": "14,00 €"},
+        {"text": "Kermaista kanapastaa ja aurinkokuivattua tomaattia", "price": "16,50 €"},
+        {"text": "Paahdettua lohta, perunamuhennosta ja kermaviilikastiketta", "price": "18,00 €"},
+        {"text": "Kuningatarpavlova", "price": "5,00 €"}
+      ]
+    },
+    {
+      "name": "Shell HelmiSimpukka Salo Halikko",
+      "address": "Vaskiontie 420, 24800 Salo",
+      "website": "https://helmisimpukka.fi/asemat/salo-halikko",
+      "items": [
+        {"text": "Kylmäsavulohikiusaus", "price": "14,00 €"},
+        {"text": "Helmen pannupihvejä ja pekoni-sipulikastiketta", "price": "14,00 €"},
+        {"text": "Espanjalaista chorizokeittoa", "price": "10,90 €"},
+        {"text": "Sipulipihvi possun ulkofileestä lautasannos", "price": "16,50 €"}
+      ]
+    },
+    {
+      "name": "Teijun Keittiö",
+      "address": "Turuntie 35, 24100 Salo",
+      "website": "https://www.teijunkeittio.fi/",
+      "items": [
+        {"text": "Porsaan grillipihvit", "price": "12,70 €"},
+        {"text": "Paholasien kanapasta", "price": "12,70 €"},
+        {"text": "Nakkikeitto", "price": "12,70 €"},
+        {"text": "Hedelmäsalaatti", "price": "12,70 €"}
+      ]
+    },
+    {
+      "name": "Wiurilan kartanoravintola",
+      "address": "Viurilantie 126, 24910 Salo",
+      "website": "https://wiurilansigrid.fi/lounas/",
+      "items": [
+        {"text": "Keittolounas", "price": "12,00 €"},
+        {"text": "Lihapullat ja perunamuhennos", "price": "14,50 €"},
+        {"text": "Tyrnirahka", "price": "14,50 €"}
+      ]
+    },
+    {
+      "name": "Antonio Salo",
+      "address": "Vilhonkatu 8, 24100 Salo",
+      "website": "https://www.raflaamo.fi/fi/ravintola/salo/antonio-salo/menu/lounas",
+      "items": []
+    }
+  ]
+}
