@@ -93,10 +93,10 @@
       "address": "Turuntie 35, 24100 Salo",
       "website": "https://www.teijunkeittio.fi/",
       "items": [
-        {"text": "Porsaan grillipihvit", "price": "12,70 €"},
-        {"text": "Paholasien kanapasta", "price": "12,70 €"},
-        {"text": "Nakkikeitto", "price": "12,70 €"},
-        {"text": "Hedelmäsalaatti", "price": "12,70 €"}
+        {"text": "Porsaan grillipihvit (GL Saksa) pippurikastike", "price": ""},
+        {"text": "Tex mex lasagnette (L chili)", "price": ""},
+        {"text": "Pinaattikeitto (GL)", "price": ""},
+        {"text": "Suklaamoussea", "price": ""}
       ]
     },
     {
