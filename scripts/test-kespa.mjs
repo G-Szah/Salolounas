@@ -6,6 +6,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 
 const SOURCE_URL = 'https://www.kespa.fi/';
 const WEEKDAYS = ['sunnuntai', 'maanantai', 'tiistai', 'keskiviikko', 'torstai', 'perjantai', 'lauantai'];
+const DEBUG_DIR = 'data/debug';
 
 function decodeEntities(s) {
   return s
@@ -32,7 +33,7 @@ function parseKespa(lines, date) {
   const month = date.getMonth() + 1;
   const header = new RegExp(`^${dayName}\\s+${day}\\.${month}\\.?$`, 'i');
   const start = lines.findIndex(line => header.test(line));
-  if (start === -1) throw new Error(`Päiväotsikkoa ei löytynyt: ${dayName} ${day}.${month}.`);
+  if (start === -1) return { items: [], error: `Päiväotsikkoa ei löytynyt: ${dayName} ${day}.${month}.`, start: -1 };
 
   const otherDays = WEEKDAYS.filter(d => d !== dayName).join('|');
   const nextHeader = new RegExp(`^(${otherDays})\\s+\\d{1,2}\\.\\d{1,2}\\.?$`, 'i');
@@ -42,45 +43,50 @@ function parseKespa(lines, date) {
     const line = lines[i].replace(/^[-•*]\s*/, '').trim();
     if (line.length >= 2) items.push(line);
   }
-  return items;
+  return { items, error: null, start };
 }
 
 async function main() {
-  const response = await fetch(SOURCE_URL, {
-    headers: { 'User-Agent': 'Mozilla/5.0 (Salolounas Kespa test; +https://github.com/G-Szah/Salolounas)' },
-    signal: AbortSignal.timeout(20000),
-  });
-  if (!response.ok) throw new Error(`Kespa fetch epäonnistui: HTTP ${response.status}`);
-
-  const html = await response.text();
+  mkdirSync(DEBUG_DIR, { recursive: true });
   const date = new Date();
-  const lines = htmlToLines(html);
-  const items = parseKespa(lines, date);
-
-  const expected = [
-    'Pyttipannu',
-    'Porsaan ulkofilee',
-    'Koskenlaskija-Juustokeitto',
-    'Persikkarahka',
-  ];
-  const missing = expected.filter(item => !items.some(line => line.toLowerCase().includes(item.toLowerCase())));
-
-  const output = {
+  const base = {
     source: SOURCE_URL,
     fetchedAt: new Date().toISOString(),
     targetDate: date.toISOString().slice(0, 10),
     targetDay: `${WEEKDAYS[date.getDay()]} ${date.getDate()}.${date.getMonth() + 1}.`,
-    items,
-    validation: { expected, missing, passed: missing.length === 0 },
   };
 
-  mkdirSync('data/debug', { recursive: true });
-  writeFileSync('data/debug/kespa-source.html', html, 'utf8');
-  writeFileSync('data/debug/kespa-parsed.json', JSON.stringify(output, null, 2), 'utf8');
+  try {
+    const response = await fetch(SOURCE_URL, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (Salolounas Kespa test; +https://github.com/G-Szah/Salolounas)' },
+      signal: AbortSignal.timeout(20000),
+    });
+    if (!response.ok) throw new Error(`Kespa fetch epäonnistui: HTTP ${response.status}`);
 
-  console.log(JSON.stringify(output, null, 2));
-  if (missing.length) {
-    throw new Error(`Kespa-parserin validointi epäonnistui. Puuttuu: ${missing.join(', ')}`);
+    const html = await response.text();
+    writeFileSync(`${DEBUG_DIR}/kespa-source.html`, html, 'utf8');
+
+    const lines = htmlToLines(html);
+    const parsed = parseKespa(lines, date);
+    const expected = ['Pyttipannu', 'Porsaan ulkofilee', 'Koskenlaskija-Juustokeitto', 'Persikkarahka'];
+    const missing = expected.filter(item => !parsed.items.some(line => line.toLowerCase().includes(item.toLowerCase())));
+    const output = {
+      ...base,
+      httpStatus: response.status,
+      foundHeaderAtLine: parsed.start,
+      parserError: parsed.error,
+      items: parsed.items,
+      validation: { expected, missing, passed: !parsed.error && missing.length === 0 },
+      sampleLines: lines.slice(0, 250),
+    };
+    writeFileSync(`${DEBUG_DIR}/kespa-parsed.json`, JSON.stringify(output, null, 2), 'utf8');
+    console.log(JSON.stringify(output, null, 2));
+    if (!output.validation.passed) process.exitCode = 1;
+  } catch (error) {
+    const output = { ...base, error: error.message, validation: { passed: false } };
+    writeFileSync(`${DEBUG_DIR}/kespa-parsed.json`, JSON.stringify(output, null, 2), 'utf8');
+    console.error(error);
+    process.exitCode = 1;
   }
 }
 
