@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Salolounas</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <h1>🍽 Salolounas</h1>
+      <p id="date-label">Ladataan päivämäärää…</p>
+    </div>
+  </header>
+
+  <main>
+    <div id="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Haetaan lounaslistoja…</p>
+    </div>
+    <div id="error" class="error hidden"></div>
+    <div id="restaurants" class="grid"></div>
+  </main>
+
+  <footer>
+    <p>Tiedot: <a href="https://www.maittavamenu.fi/lounaslistat/lounaslista-salo/" target="_blank">maittavamenu.fi</a></p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
