@@ -5,8 +5,8 @@
 // tuloksen data/menu.json-tiedostoon.
 //
 // HUOM: Tämä lähde on todettu ajoittain epätarkaksi (esim. Factory Salo,
-// Rosmariini). Skripti korvataan pian ravintolakohtaisilla parsijoilla,
-// jotka hakevat suoraan ravintoloiden omilta sivuilta.
+// Rosmariini, Kespa). Skripti korvataan pian ravintolakohtaisilla
+// parsijoilla, jotka hakevat suoraan ravintoloiden omilta sivuilta.
 
 import { writeFileSync, mkdirSync } from 'node:fs';
 
@@ -25,16 +25,10 @@ const RESTAURANTS = [
     website: 'https://www.kespa.fi/' },
   { name: 'KhaoSuk', address: 'Helsingintie 8, 24100 Salo',
     url: 'https://lounasopas.com/restaurant/khaosuk-salo',
-    website: 'https://www.khaosuk.com/' },
-  { name: 'Liikenneasema Kivihovi', address: 'Bulevardi 10, 25410 Suomusjärvi',
-    url: 'https://lounasopas.com/restaurant/liikenneasema-kivihovi-salo-salo',
-    website: 'https://kivihovi.fi/lounas' },
+    website: 'https://www.khaosuk.com/menu?menu=khaosuk-lounas' },
   { name: 'Lounasravintola Rosmariini', address: 'Joensuunkatu 13, 24100 Salo',
     url: 'https://lounasopas.com/restaurant/lounasravintola-rosmariini-salo',
     website: 'https://pitopalvelurosmariini.fi/lounas/' },
-  { name: "Ravintola Mama's", address: 'Salorankatu 5-7, 24240 Salo',
-    url: 'https://lounasopas.com/restaurant/ravintola-mama-s-salo-salorankatu-5-7-salo',
-    website: 'https://www.ravintolamamas.fi/' },
   { name: 'Rikalan krouvi', address: 'Rikalantie 74, 24800 Halikko, Salo',
     url: 'https://lounasopas.com/restaurant/rikalan-krouvi-salo-rikalantie-74-salo',
     website: 'https://rikalankrouvi.fi/lounas/' },

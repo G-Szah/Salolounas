@@ -56,12 +56,6 @@
       "items": []
     },
     {
-      "name": "Liikenneasema Kivihovi",
-      "address": "Bulevardi 10, 25410 Suomusjärvi",
-      "website": "https://kivihovi.fi/lounas",
-      "items": [{"text": "Rapea kalapala, remouladekastiketta", "price": "14,00 €"}]
-    },
-    {
       "name": "Lounasravintola Rosmariini",
       "address": "Joensuunkatu 13, 24100 Salo",
       "website": "https://pitopalvelurosmariini.fi/lounas/",
@@ -70,16 +64,6 @@
         {"text": "Jauhelihamoussaka L, GL", "price": ""},
         {"text": "Riisi, varhaiskaalia chimichurilla", "price": ""},
         {"text": "Mustikkakiisseli L, GL", "price": ""}
-      ]
-    },
-    {
-      "name": "Ravintola Mama's",
-      "address": "Salorankatu 5-7, 24240 Salo",
-      "website": "https://www.ravintolamamas.fi/",
-      "items": [
-        {"text": "Lounas", "price": "11,50 €"},
-        {"text": "Keittolounas", "price": "9,50 €"},
-        {"text": "Salaattilounas", "price": "8,50 €"}
       ]
     },
     {
