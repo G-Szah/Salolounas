@@ -1,0 +1,30 @@
+name: Paivita Rosmariini-lounas
+
+on:
+  schedule:
+    - cron: '35 5 * * 1-5'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  update-rosmariini:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Hae Rosmariinin tämän päivän lounas
+        run: node scripts/update-rosmariini.mjs
+
+      - name: Tallenna päivittynyt Rosmariini-data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/menus/rosmariini.json
+          git diff --staged --quiet || git commit -m "chore: päivitä Rosmariini-lounas $(date -u +%Y-%m-%d)"
+          git push

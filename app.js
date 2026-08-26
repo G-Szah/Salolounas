@@ -55,11 +55,9 @@ function renderCard(r) {
   </div>`;
 }
 
-// Palauttaa ravintolakohtaisen, automaattisesti haetun listan vain, jos
-// sen päiväys täsmää tämän päivän kanssa. Muussa tapauksessa päädata säilyy.
-async function loadFreshKespa() {
+async function loadFreshMenu(slug) {
   try {
-    const res = await fetch(`data/menus/kespa.json?t=${Date.now()}`);
+    const res = await fetch(`data/menus/${slug}.json?t=${Date.now()}`);
     if (!res.ok) return null;
     const data = await res.json();
     if (data.targetDate !== TODAY_ISO || !Array.isArray(data.items) || data.items.length === 0) return null;
@@ -67,6 +65,14 @@ async function loadFreshKespa() {
   } catch {
     return null;
   }
+}
+
+function replaceRestaurant(restaurants, freshData, name) {
+  if (!freshData) return false;
+  const index = restaurants.findIndex(r => r.name === name);
+  if (index === -1) return false;
+  restaurants[index] = freshData;
+  return true;
 }
 
 async function load() {
@@ -79,15 +85,16 @@ async function load() {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
 
-    // Kespa on ensimmäinen automaattisesti, omalta sivulta päivittyvä kortti.
-    const freshKespa = await loadFreshKespa();
-    if (freshKespa) {
-      const index = data.restaurants.findIndex(r => r.name === 'Kespa');
-      if (index !== -1) data.restaurants[index] = freshKespa;
-    }
+    // Vain testatut, ravintolan omalta sivulta haettavat päivitykset korvaavat fallbackin.
+    const [freshKespa, freshRosmariini] = await Promise.all([
+      loadFreshMenu('kespa'),
+      loadFreshMenu('rosmariini'),
+    ]);
+    const hasFreshKespa = replaceRestaurant(data.restaurants, freshKespa, 'Kespa');
+    const hasFreshRosmariini = replaceRestaurant(data.restaurants, freshRosmariini, 'Lounasravintola Rosmariini');
 
     loadEl.classList.add('hidden');
-    if (data.generated && data.generated !== TODAY_ISO && !freshKespa) {
+    if (data.generated && data.generated !== TODAY_ISO && !hasFreshKespa && !hasFreshRosmariini) {
       showNotice(`Huom: näkyvä lista on viimeksi päivitetty ${data.generated} – ei välttämättä tämän päivän mukainen.`);
     }
     gridEl.innerHTML = data.restaurants.map(renderCard).join('');
