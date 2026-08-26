@@ -17,16 +17,17 @@
       ]
     },
     {
-      "name": "Dreamravintola",
-      "address": "Savenvalajankatu 3, 24260 Salo",
-      "website": "https://www.dreamravintola.fi/",
-      "items": [{"text": "Lounas (sisältää myös salaatin)", "price": "12,00 €"}]
-    },
-    {
       "name": "Factory Salo IoT Campus",
       "address": "Joensuunkatu 7, 24100 Salo",
       "website": "https://ravintolafactory.com/lounasravintolat/ravintolat/factory-salo/",
-      "items": [{"text": "Kotiruokabuffet: Tomaattinen rapukeitto + Paneroitua kanan sisäfilettä + ranch-uunilohkoperunat + Tofu Tikka Masala + Aurinkokiisseli minttuvaahdolla", "price": "13,70 €"}]
+      "items": [
+        {"text": "Paahdettu kukkakaalikeitto (L+G) krutongit (VE)", "price": ""},
+        {"text": "Naudan hanger steakia timjami-punaviinikastikkeella (M+G+VS) kermaperunat (L+G)", "price": ""},
+        {"text": "Frutti Di Mare äyriäispasta tuoreilla yrteillä (L+VS)", "price": ""},
+        {"text": "Pepperonipizza rucolalla (L+VS)", "price": ""},
+        {"text": "Rapeita punajuurikroketteja värikkäällä kasvispedillä (VE+G+VS)", "price": ""},
+        {"text": "Omena-kanelirahka (L+G) kauracrumble (L+G)", "price": ""}
+      ]
     },
     {
       "name": "Kastu",
@@ -63,14 +64,8 @@
     {
       "name": "Lounasravintola Rosmariini",
       "address": "Joensuunkatu 13, 24100 Salo",
-      "website": "https://pitopalvelurosmariini.fi/",
-      "items": [
-        {"text": "Kermainen lohikeitto (L,G)", "price": "11,00 €"},
-        {"text": "Ylikypsää BBQ-possua (M,G), paistetut perunat", "price": "14,50 €"},
-        {"text": "Broileri burgundin tapaan (L,G), riisi", "price": "14,50 €"},
-        {"text": "Pinaattilettuja ja puolukkahilloa (L)", "price": "12,50 €"},
-        {"text": "Marjapiirakkaa ja vaniljakastike (L)", "price": "5,50 €"}
-      ]
+      "website": "https://pitopalvelurosmariini.fi/lounas/",
+      "items": []
     },
     {
       "name": "Ravintola Mama's",
