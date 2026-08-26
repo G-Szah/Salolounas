@@ -62,12 +62,17 @@ main { max-width: 1200px; margin: 0 auto; padding: 28px 16px 60px; }
   overflow: hidden; transition: transform .18s, box-shadow .18s;
 }
 .card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(79,142,247,.15); }
+.card.status-empty { opacity: .7; }
+.card.status-error { border-color: #c0392b55; }
 
 .card-header { background: var(--surface2); padding: 16px 18px 12px; border-bottom: 1px solid var(--border); }
 .card-title-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .card-header h2 { font-size: 1rem; font-weight: 700; color: var(--text); line-height: 1.35; }
 
-.status-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; flex-shrink: 0; }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.status-ok    .status-dot { background: #22c55e; }
+.status-empty .status-dot { background: #f59e0b; }
+.status-error .status-dot { background: #ef4444; }
 
 .address { font-size: .75rem; color: var(--muted); margin-top: 5px; }
 
@@ -81,6 +86,8 @@ main { max-width: 1200px; margin: 0 auto; padding: 28px 16px 60px; }
 .menu-items li:last-child { border-bottom: none; }
 .menu-items li span:first-child { flex: 1; }
 .item-price { color: var(--accent); font-weight: 600; white-space: nowrap; font-size: .8rem; }
+
+.muted-note { color: var(--muted); font-size: .85rem; padding: 8px 0; }
 
 .card-footer {
   padding: 10px 18px; border-top: 1px solid var(--border); display: flex;

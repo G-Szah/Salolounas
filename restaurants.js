@@ -1,10 +1,28 @@
-// Salon ravintolat – tunnetut viralliset sivut "Avaa sivu"-linkkeja varten.
-const WEBSITES = {
-  "Kastu": "https://ravintolakastu.fi/",
-  "Kotipizza": "https://www.kotipizza.fi/",
-  "Wiurilan kartanoravintola": "https://www.wiurila.fi/",
-};
+// Salon ravintolat, joilla on aidosti päiväkohtainen, rakenteinen
+// lounaslista SUORAAN omalla kotisivullaan (ei aggregaattorilta).
+// Loput Salon lounaspaikat karsittiin pois, koska niiden omat sivut
+// eivät julkaise päiväkohtaisia annoksia rakenteisesti.
 
-function getWebsite(name) {
-  return WEBSITES[name] || `https://lounasopas.com/lounas/salo`;
-}
+const RESTAURANTS = [
+  {
+    name: 'Kastu',
+    address: 'Helsingintie 3, 24100 Salo',
+    url: 'https://ravintolakastu.fi/lounas/',
+    website: 'https://ravintolakastu.fi/',
+    type: 'kastu',
+  },
+  {
+    name: 'Factory Salo IoT Campus',
+    address: 'Joensuunkatu 7, 24100 Salo',
+    url: 'https://ravintolafactory.com/lounasravintolat/ravintolat/factory-salo/',
+    website: 'https://ravintolafactory.com/lounasravintolat/ravintolat/factory-salo/',
+    type: 'factory',
+  },
+  {
+    name: 'Teijun Keittiö',
+    address: 'Turuntie 35, 24100 Salo',
+    url: 'https://www.teijunkeittio.fi/',
+    website: 'https://www.teijunkeittio.fi/',
+    type: 'teijun',
+  },
+];
