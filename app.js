@@ -86,15 +86,17 @@ async function load() {
     const data = await res.json();
 
     // Vain testatut, ravintolan omalta sivulta haettavat päivitykset korvaavat fallbackin.
-    const [freshKespa, freshRosmariini] = await Promise.all([
+    const [freshKespa, freshRosmariini, freshRikalanKrouvi] = await Promise.all([
       loadFreshMenu('kespa'),
       loadFreshMenu('rosmariini'),
+      loadFreshMenu('rikalan-krouvi'),
     ]);
     const hasFreshKespa = replaceRestaurant(data.restaurants, freshKespa, 'Kespa');
     const hasFreshRosmariini = replaceRestaurant(data.restaurants, freshRosmariini, 'Lounasravintola Rosmariini');
+    const hasFreshRikalanKrouvi = replaceRestaurant(data.restaurants, freshRikalanKrouvi, 'Rikalan krouvi');
 
     loadEl.classList.add('hidden');
-    if (data.generated && data.generated !== TODAY_ISO && !hasFreshKespa && !hasFreshRosmariini) {
+    if (data.generated && data.generated !== TODAY_ISO && !hasFreshKespa && !hasFreshRosmariini && !hasFreshRikalanKrouvi) {
       showNotice(`Huom: näkyvä lista on viimeksi päivitetty ${data.generated} – ei välttämättä tämän päivän mukainen.`);
     }
     gridEl.innerHTML = data.restaurants.map(renderCard).join('');
