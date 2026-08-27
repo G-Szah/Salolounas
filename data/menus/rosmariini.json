@@ -3,23 +3,27 @@
   "address": "Joensuunkatu 13, 24100 Salo",
   "website": "https://pitopalvelurosmariini.fi/lounas/",
   "source": "https://pitopalvelurosmariini.fi/lounas/",
-  "updatedAt": "2026-08-26T12:49:39.161Z",
-  "targetDate": "2026-08-26",
+  "updatedAt": "2026-08-27T16:40:20.626Z",
+  "targetDate": "2026-08-27",
   "items": [
     {
-      "text": "Butter chicken L, GL FIN",
+      "text": "Oskarin leike, choronkastike L, (GL)",
       "price": ""
     },
     {
-      "text": "Jauhelihamoussaka L, GL",
+      "text": "Lohkoperunat, höyrytetty parsakaali",
       "price": ""
     },
     {
-      "text": "Riisi,varhaiskaalia chimichurilla",
+      "text": "Pannari ja Hillo L, (GL)",
       "price": ""
     },
     {
-      "text": "Mustikkakiisseli L, GL",
+      "text": "Hernekeitto L, GL",
+      "price": ""
+    },
+    {
+      "text": "Pannari ja Hillo L, (GL)",
       "price": ""
     }
   ]
