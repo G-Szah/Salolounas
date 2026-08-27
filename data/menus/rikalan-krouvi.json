@@ -1,0 +1,26 @@
+{
+  "name": "Rikalan krouvi",
+  "address": "Rikalantie 74, 24800 Halikko, Salo",
+  "website": "https://rikalankrouvi.fi/lounas/",
+  "source": "https://rikalankrouvi.fi/lounas/",
+  "updatedAt": "2026-08-27T16:46:17.077Z",
+  "targetDate": "2026-08-27",
+  "items": [
+    {
+      "text": "Päärynä-ricottajuustosalaattia (G) 14 €",
+      "price": ""
+    },
+    {
+      "text": "Porkkanarisottoa ja savustettua tofua (L, G, saatavana V)",
+      "price": "16,50 €"
+    },
+    {
+      "text": "Härän paahtopaistia, kanttarellikastiketta ja persiljaperunaa (L, G) 18 €",
+      "price": ""
+    },
+    {
+      "text": "Kuningatarbritakakkua (L, G) 5 €",
+      "price": ""
+    }
+  ]
+}
