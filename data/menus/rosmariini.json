@@ -3,27 +3,183 @@
   "address": "Joensuunkatu 13, 24100 Salo",
   "website": "https://pitopalvelurosmariini.fi/lounas/",
   "source": "https://pitopalvelurosmariini.fi/lounas/",
-  "updatedAt": "2026-08-27T16:40:20.626Z",
-  "targetDate": "2026-08-27",
+  "updatedAt": "2026-08-28T17:39:55.510Z",
+  "targetDate": "2026-08-28",
   "items": [
     {
-      "text": "Oskarin leike, choronkastike L, (GL)",
+      "text": "Burger-Perjantai:",
       "price": ""
     },
     {
-      "text": "Lohkoperunat, höyrytetty parsakaali",
+      "text": "Burgerit lisukkeilla, ranskalaiset L, (GL)",
       "price": ""
     },
     {
-      "text": "Pannari ja Hillo L, (GL)",
+      "text": "Leivonnainen L, (GL)",
       "price": ""
     },
     {
-      "text": "Hernekeitto L, GL",
+      "text": "TILAA LOUNASLISTA",
       "price": ""
     },
     {
-      "text": "Pannari ja Hillo L, (GL)",
+      "text": "Voit tilata viikon lounaslistan maksutta sähköpostiisi alla olevalla lomakkeella. Lounaslista lähetetään tilanneille sunnuntaisin.",
+      "price": ""
+    },
+    {
+      "text": "Please enable JavaScript in your browser to complete this form.",
+      "price": ""
+    },
+    {
+      "text": "Please enable JavaScript in your browser to complete this form.",
+      "price": ""
+    },
+    {
+      "text": "Nimi *",
+      "price": ""
+    },
+    {
+      "text": "Sähköposti Merkitse tilattava",
+      "price": ""
+    },
+    {
+      "text": "Merkitse tilattava lista *",
+      "price": ""
+    },
+    {
+      "text": "Lounaslista",
+      "price": ""
+    },
+    {
+      "text": "Ateriapalvelulista",
+      "price": ""
+    },
+    {
+      "text": "Sähköposti *",
+      "price": ""
+    },
+    {
+      "text": "Lähetä",
+      "price": ""
+    },
+    {
+      "text": "Salon Rosmariini Oy",
+      "price": ""
+    },
+    {
+      "text": "Joensuunkatu 13, Salo,",
+      "price": ""
+    },
+    {
+      "text": "2.krs ICT-Center",
+      "price": ""
+    },
+    {
+      "text": "p. 040 0715 088",
+      "price": ""
+    },
+    {
+      "text": "Toinen toimipiste",
+      "price": ""
+    },
+    {
+      "text": "Kalkkitie 2, 24280 Salo,",
+      "price": ""
+    },
+    {
+      "text": "2.krs Jame-Shaft Oy",
+      "price": ""
+    },
+    {
+      "text": "p. 041 3290 308",
+      "price": ""
+    },
+    {
+      "text": "Lounas katettuna",
+      "price": ""
+    },
+    {
+      "text": "Ma-pe klo 10.30 – 14.00",
+      "price": ""
+    },
+    {
+      "text": "Ravintola avoinna",
+      "price": ""
+    },
+    {
+      "text": "Ma-pe klo 7.00 – 15.00",
+      "price": ""
+    },
+    {
+      "text": "LOUNAS",
+      "price": ""
+    },
+    {
+      "text": "PALVELUT",
+      "price": ""
+    },
+    {
+      "text": "PITOPALVELU",
+      "price": ""
+    },
+    {
+      "text": "JUHLATILAT",
+      "price": ""
+    },
+    {
+      "text": "KOKOUSPALVELU",
+      "price": ""
+    },
+    {
+      "text": "YHTEYSTIEDOT",
+      "price": ""
+    },
+    {
+      "text": "KATSO MYÖS:",
+      "price": ""
+    },
+    {
+      "text": "MUMMAN MURKINAT",
+      "price": ""
+    },
+    {
+      "text": "Verkkolaskutusosoite:",
+      "price": ""
+    },
+    {
+      "text": "003731804319",
+      "price": ""
+    },
+    {
+      "text": "Verkkolaskuoperaattori:",
+      "price": ""
+    },
+    {
+      "text": "ITELFIHH",
+      "price": ""
+    },
+    {
+      "text": "p. 0400 715 088",
+      "price": ""
+    },
+    {
+      "text": "rosmariini@ pitopalvelurosmariini.fi",
+      "price": ""
+    },
+    {
+      "text": "Facebook",
+      "price": ""
+    },
+    {
+      "text": "Instagram",
+      "price": ""
+    },
+    {
+      "text": "Inspiro Theme",
+      "price": ""
+    },
+    {
+      "text": "by WPZOOM",
       "price": ""
     }
   ]
