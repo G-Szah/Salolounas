@@ -3,23 +3,27 @@
   "address": "Koskikatu 1, 24240 Salo",
   "website": "https://www.kespa.fi/",
   "source": "https://www.kespa.fi/",
-  "updatedAt": "2026-08-28T17:32:43.201Z",
-  "targetDate": "2026-08-28",
+  "updatedAt": "2026-08-31T11:42:56.771Z",
+  "targetDate": "2026-08-31",
   "items": [
     {
-      "text": "Kievin kana VL",
+      "text": "Leivitetty porsaanleike L,",
       "price": ""
     },
     {
-      "text": "Pulled pork L, G, kermaperunoita L, G",
+      "text": "pippurikastike L, G",
       "price": ""
     },
     {
-      "text": "Kermainen lohikeitto L, G",
+      "text": "Uunimakkara L, G",
       "price": ""
     },
     {
-      "text": "Puolukkapiirakka L, vaniljakastike G",
+      "text": "Herkkusienikeitto L, G",
+      "price": ""
+    },
+    {
+      "text": "Raparperipiirakka L, vaniljakastike G",
       "price": ""
     }
   ]
