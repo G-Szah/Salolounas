@@ -3,19 +3,23 @@
   "address": "Joensuunkatu 13, 24100 Salo",
   "website": "https://pitopalvelurosmariini.fi/lounas/",
   "source": "https://pitopalvelurosmariini.fi/lounas/",
-  "updatedAt": "2026-09-01T10:22:17.717Z",
-  "targetDate": "2026-09-01",
+  "updatedAt": "2026-09-02T09:51:02.277Z",
+  "targetDate": "2026-09-02",
   "items": [
     {
-      "text": "Kananpojan maustettu reisileike L, GL",
+      "text": "Kampelafilee, voi-sipulikastike L, GL",
       "price": ""
     },
     {
-      "text": "Kaalikääryle, puolukkahillo L, GL",
+      "text": "Savuporokiusaus L, GL",
       "price": ""
     },
     {
-      "text": "Muusi , Kasvispaistos Kaura-omenapaistos, vaniljakastike L, (GL)",
+      "text": "Keitetty peruna, paahdetut punajuuret",
+      "price": ""
+    },
+    {
+      "text": "Hedelmäkiisseli L, GL",
       "price": ""
     }
   ]
