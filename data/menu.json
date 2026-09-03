@@ -1,6 +1,6 @@
 {
-  "generated": "2026-09-01",
-  "dayLabel": "tiistai",
+  "generated": "2026-09-03",
+  "dayLabel": "torstai",
   "restaurants": [
     {
       "name": "ABC Piihovi Salo Restaurant",
@@ -20,11 +20,11 @@
       "website": "https://ravintolakastu.fi/",
       "items": [
         {
-          "text": "Riistak&#228;ristys muusilla",
+          "text": "Mets&#228;st&#228;j&#228;n mureke",
           "price": "13,70 €"
         },
         {
-          "text": "Sienikeitto",
+          "text": "Fenkoli-sitruunakeitto",
           "price": "12,50 €"
         }
       ]
