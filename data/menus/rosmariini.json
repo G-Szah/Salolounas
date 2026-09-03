@@ -3,23 +3,27 @@
   "address": "Joensuunkatu 13, 24100 Salo",
   "website": "https://pitopalvelurosmariini.fi/lounas/",
   "source": "https://pitopalvelurosmariini.fi/lounas/",
-  "updatedAt": "2026-09-02T09:51:02.277Z",
-  "targetDate": "2026-09-02",
+  "updatedAt": "2026-09-03T10:02:29.442Z",
+  "targetDate": "2026-09-03",
   "items": [
     {
-      "text": "Kampelafilee, voi-sipulikastike L, GL",
+      "text": "Shashlik-vartaat L, (GL)",
       "price": ""
     },
     {
-      "text": "Savuporokiusaus L, GL",
+      "text": "Valkosipuliperunat, paprika-sipulipaistos",
       "price": ""
     },
     {
-      "text": "Keitetty peruna, paahdetut punajuuret",
+      "text": "Pannari ja hillo L, (GL)",
       "price": ""
     },
     {
-      "text": "Hedelmäkiisseli L, GL",
+      "text": "Hernekeitto L,GL",
+      "price": ""
+    },
+    {
+      "text": "Pannari ja Hillo L, (GL)",
       "price": ""
     }
   ]
